@@ -17,6 +17,8 @@ class UserType(DjangoObjectType):
 class Query(graphene.ObjectType):
     blogs = graphene.List(BlogType)
     login = graphene.Field(UserType, username=graphene.String(), password=graphene.String())
+    authorblogs = graphene.List(BlogType, username=graphene.String())
+    user = DjangoConnectionField(UserType)
 
     def resolve_blogs(self, info, **kwargs):
         all_blogs = Blog.objects.all()
@@ -30,6 +32,12 @@ class Query(graphene.ObjectType):
 
         return auth_user
 
+    def resolve_authorblogs(self, info, username, **kwargs):
+        user = get_user_model().objects.get(username=username)
+
+        get_blogs = Blog.objects.filter(author=user)
+        
+        return get_blogs
 
 class CreateBlog(graphene.Mutation):
     createBlog = graphene.Field(BlogType)
