@@ -1,6 +1,6 @@
 import graphene
-from graphene_django import DjangoObjectType
-from graphene import ObjectType
+from graphene_django import DjangoObjectType, DjangoConnectionField
+from graphene import ObjectType, List
 from .models import Blog
 from django.contrib.auth import authenticate, get_user_model
 from datetime import datetime
@@ -10,15 +10,27 @@ class BlogType(DjangoObjectType):
         model = Blog
 
 class UserType(DjangoObjectType):
+    blogs = List(BlogType)
     class Meta:
         model = get_user_model()
+        use_connection = True
+
+    def resolve_blogs(root, info, **kwargs):
+        print("Heyyy")
+        print(info.context)
+        return info.context.blogs_by_author_id_loader.load(root.id)
 
 
 class Query(graphene.ObjectType):
     blogs = graphene.List(BlogType)
     login = graphene.Field(UserType, username=graphene.String(), password=graphene.String())
     authorblogs = graphene.List(BlogType, username=graphene.String())
-    user = DjangoConnectionField(UserType)
+    # user = DjangoConnectionField(UserType)
+    allAuthorBlogs = DjangoConnectionField(UserType)
+
+    def resolve_allAuthorBlogs(root, info, **kwargs):
+        print("Executed")
+        return get_user_model().objects.all()
 
     def resolve_blogs(self, info, **kwargs):
         all_blogs = Blog.objects.all()

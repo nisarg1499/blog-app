@@ -20,9 +20,10 @@ from graphene_django.views import GraphQLView
 import debug_toolbar
 from django.conf import settings
 from django.urls import include, path
+from blog.views import CustomGraphQLView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    path('graphql/', CustomGraphQLView.as_view(graphiql=True)),
     path('debug/', include(debug_toolbar.urls)),
 ]
