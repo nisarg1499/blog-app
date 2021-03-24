@@ -16,8 +16,6 @@ class UserType(DjangoObjectType):
         use_connection = True
 
     def resolve_blogs(root, info, **kwargs):
-        print("Heyyy")
-        print(info.context)
         return info.context.blogs_by_author_id_loader.load(root.id)
 
 
@@ -29,7 +27,6 @@ class Query(graphene.ObjectType):
     allAuthorBlogs = DjangoConnectionField(UserType)
 
     def resolve_allAuthorBlogs(root, info, **kwargs):
-        print("Executed")
         return get_user_model().objects.all()
 
     def resolve_blogs(self, info, **kwargs):
