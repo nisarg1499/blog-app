@@ -1,7 +1,14 @@
 # blog-app
 A backend blog app for demo at Python Web Conference 2021!
 
-## Setup
+# Functionalities
+- Create User
+- Add blogs
+- View blogs
+- View blogs for specific author
+- Solution of N+1 problem
+
+# Setup
 To get this project up and running you should start by having Python installed on your computer. It's advised you create a virtual environment to store your projects dependencies separately. You can install virtualenv with 
 
 ```
